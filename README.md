@@ -1,59 +1,33 @@
 # Modified xv6 OS #
 
-To run the program:
-
-Type 'make' to compile the codes.
-
 Type 'make qemu' to boot xv6 operating system.
 
-### Modification 1: Creating myapp1 ###
-It echos out whatever we write back on the command line.
+### Modification 1: myapp1 ###
+To print out user input to console
 
-DESCRIPTION OF CODE (myapp1.c):
-
-* the main funtion takes as input the string required to be printed back
-* variable i traverses through the string and prints in on the command line
-
-
-### Modification 2: Creating myapp2 ###
-The copy feature takes in two files, say file1 and file2 and copy the contents of file1 to file2.
-
-DESCRIPTION OF CODE:
-
-* Fd0 and fd1 are two file descriptors for the two files
-* therefore we need two arguments, If the number of arguments is less than 2, we print out error message to standard output and exit.
-* file1 is opened is opened in read only mode
-* file2 can be created if it does not already exist
-* the while loop simply copies content from file1 to file2
-
+### Modification 2: myapp2 ###
+To copy contents of one file to another
 
 ### Modification 3: Adding a system call ###
 Adding the cps() or the current process state system call
-DESCRIPTION OF CODE:
-*	the function does not take any argument. It simply loops through the process table to show the current  process state of the given process
 
-### Modification 4: Creating dummy file ###
-This file will create child processes which which would waste CPU time by doing useless computation
+### Modification 4: Creating a file ###
+This file creates processes that consume CPU time
 
-DESCRIPTION OF CODE:
+*	the function takes in two arguments, the number of children to be created and the increment value( default is 1)
+*	fork is used to create children. The parent will wait for the child to finish before it goes back to the loop and the child will print out the process id and do some computation. This will consume some computing time so the status of the processes can be seen.
+*	later the parent will go back and create another child; the child does not create any other children.
 
-*	the function takes in two arguments, the first argument is the number of children to be created and the second argument is the increment value in our for loop; the default is 1
-*	we have used fork to create children. The parent will wait for the child to finish before it goes back to the loop and the child will print out the process id and do some computation. In this way they will consume some computing time and we can see the status of these processes
-*	later it just breaks and exits so the child does not create any other children but the parent will go back and create another child
-*	when k is smaller than n it will create the children one by one
+### Modification 5: Adding a priority attribute ###
+The processes are assigned with a priority value between 0 and 20, the smaller the value, the higher the priority. 
 
-
-### Modification 5: Adding priority attribute ###
-We will assign the process with a priority value between 0 and 20, the smaller the value, the higher the priority. 
-
-*	Added priority to a struct proc in proc.h. This data structure is the PCB that consists of all the information about a process. We add the priority attribute to it.
+*	Added priority to a struct proc in proc.h. This data structure is the PCB that consists of all the information about a process.
 *	Modified proc.c.Modified cps() so that it prints out the priority of the process also.
-*	Modified allocproc,which is a system call, a function that allocates resources to a  new process by scanning through the process table the ptable
+*	Modified allocproc,which is a system call, a function that allocates resources to a new process by scanning through the process table
 
-### Modification 6: Changing priority attribute ###
+### Modification 6: Changing the priority attribute ###
 *	Created a system call chpr(int,int) which takes in two arguments – the process id and it’s new priority.
 *	It scans through the process table and changes the priority of that process.
 
-### Modification 7: Implementing Simple Priority Scheduling ###
+### Modification 7: Implementing Priority Scheduling ###
 Modified the schedular in proc.c
-
